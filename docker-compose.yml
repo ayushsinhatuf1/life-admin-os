@@ -1,0 +1,42 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: lifeadmin
+      POSTGRES_PASSWORD: lifeadmin
+      POSTGRES_DB: lifeadmin
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeadmin"]
+      interval: 5s
+      retries: 10
+
+  storage:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports: ["9000:9000", "9001:9001"]
+    volumes: [miniodata:/data]
+
+  createbucket:
+    image: minio/mc:latest
+    depends_on: [storage]
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://storage:9000 minioadmin minioadmin; do sleep 2; done;
+      mc mb --ignore-existing local/life-admin-documents;
+      mc anonymous set none local/life-admin-documents;
+      "
+
+  mail:
+    image: axllent/mailpit:latest
+    ports: ["1025:1025", "8025:8025"]
+
+volumes:
+  pgdata:
+  miniodata:

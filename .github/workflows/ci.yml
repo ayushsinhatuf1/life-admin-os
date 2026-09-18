@@ -1,0 +1,36 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: lifeadmin
+          POSTGRES_PASSWORD: lifeadmin
+          POSTGRES_DB: lifeadmin
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lifeadmin" --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: sudo apt-get update && sudo apt-get install -y tesseract-ocr libmagic1
+      - run: pip install -r backend/requirements.txt
+      - run: psql "postgresql://lifeadmin:lifeadmin@localhost:5432/lifeadmin" -f db/schema.sql
+        env: { PGPASSWORD: lifeadmin }
+      - run: pytest -q
+        env:
+          DATABASE_URL: postgresql+psycopg://lifeadmin:lifeadmin@localhost:5432/lifeadmin
+          SECRET_KEY: test-secret-key-not-for-production
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install bandit pip-audit
+      - run: bandit -r backend/app -ll
+      - run: pip-audit -r backend/requirements.txt || true

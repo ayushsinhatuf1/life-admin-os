@@ -1,0 +1,26 @@
+filename,category,field_key,expected_value,field_type
+sample_insurance_policy.pdf,insurance,policy_number,POL-987654321,string
+sample_insurance_policy.pdf,insurance,insurer_name,Star Health and Allied Insurance,string
+sample_insurance_policy.pdf,insurance,policy_holder_name,Rahul Sharma,string
+sample_insurance_policy.pdf,insurance,sum_insured,500000,amount
+sample_insurance_policy.pdf,insurance,expiry_date,2027-03-31,date
+sample_vehicle_rc.pdf,vehicle,registration_number,DL01AB1234,string
+sample_vehicle_rc.pdf,vehicle,owner_name,Priya Sharma,string
+sample_vehicle_rc.pdf,vehicle,chassis_number,MA3ER61S001234567,string
+sample_vehicle_rc.pdf,vehicle,fuel_type,Petrol,string
+sample_vehicle_rc.pdf,vehicle,registration_date,2021-06-15,date
+sample_fixed_deposit.pdf,financial,account_or_deposit_number,FD-99887766,string
+sample_fixed_deposit.pdf,financial,institution_name,HDFC Bank,string
+sample_fixed_deposit.pdf,financial,deposit_amount,100000,amount
+sample_fixed_deposit.pdf,financial,maturity_date,2028-12-31,date
+sample_utility_bill.pdf,utility,consumer_number,1029384756,string
+sample_utility_bill.pdf,utility,biller_name,BSES Rajdhani Power Limited,string
+sample_utility_bill.pdf,utility,bill_amount,3450,amount
+sample_utility_bill.pdf,utility,due_date,2026-10-15,date
+sample_aadhaar.pdf,government_id,id_number,XXXX-XXXX-1234,string
+sample_aadhaar.pdf,government_id,full_name,Rahul Sharma,string
+sample_aadhaar.pdf,government_id,date_of_birth,1988-04-12,date
+sample_property_deed.pdf,property,property_identifier,Flat 402 Palm Heights Sector 62,string
+sample_property_deed.pdf,property,buyer_name,Rahul Sharma,string
+sample_property_deed.pdf,property,seller_name,Anil Verma,string
+sample_property_deed.pdf,property,registration_date,2019-11-20,date
