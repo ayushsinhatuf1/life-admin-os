@@ -75,8 +75,19 @@ async def upload(
         raise HTTPException(status_code=413, detail=f"Files must be under {settings.max_upload_mb} MB.")
 
     # 2. Trust the sniffed type, not the client-declared one.
-    import magic
-    mime = magic.from_buffer(data[:4096], mime=True)
+    try:
+        import magic
+        mime = magic.from_buffer(data[:4096], mime=True)
+    except Exception:
+        if data.startswith(b"%PDF"):
+            mime = "application/pdf"
+        elif data.startswith(b"\xff\xd8\xff"):
+            mime = "image/jpeg"
+        elif data.startswith(b"\x89PNG\r\n\x1a\n"):
+            mime = "image/png"
+        else:
+            mime = file.content_type or "application/octet-stream"
+
     if mime not in ALLOWED:
         raise HTTPException(status_code=415, detail=f"{mime} isn't a supported file type.")
 
